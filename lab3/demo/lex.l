@@ -8,5 +8,7 @@
 "-" { return SUB; }
 "*" { return MUL; }
 "/" { return DIV; }
+\( {return LB;}
+\) {return RB;}
 [ \n\r\t] {}
 . { fprintf(stderr, "unknown symbol: %s\n", yytext); exit(1); }
