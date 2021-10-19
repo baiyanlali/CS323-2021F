@@ -8,6 +8,6 @@ BISON=bison
 .syntax: syntax.y
 	$(BISON) -t -d syntax.y
 jp: .lex .syntax
-	$(CC) syntax.tab.c -lfl -ly -o jp.out
+	$(CC) syntax.tab.c -lfl -o jp.out
 clean:
 	@rm -f lex.yy.c syntax.tab.* *.out
