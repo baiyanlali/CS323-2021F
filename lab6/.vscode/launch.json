@@ -1,0 +1,30 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Parser2",
+            "request": "launch",
+            "mainClass": "Parser2",
+            "args": "\"a*(a+a)\"",
+            "projectName": "lab6_345a40c4"
+        },
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Launch Parser",
+            "request": "launch",
+            "mainClass": "Parser",
+            "args": "a+a",
+            "projectName": "lab6_345a40c4"
+        }
+    ]
+}

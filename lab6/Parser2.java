@@ -1,30 +1,18 @@
-/*
-Non-terminals: S, T, E, F, X
-Terminal: a, +, *, (, )
-S -> TE
-E -> +TE
-E -> ε
-T -> FX
-X -> *FX
-X -> ε
-F -> (S)
-F -> a
-*/
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
+import java.util.*;
 
-public class Parser {
+public class Parser2 {
     static ArrayList<Character> nonterminals = new ArrayList<>();
     static ArrayList<Character> terminals = new ArrayList<>();
-    static ArrayList<Production> productions = new ArrayList<>();
-    static Production[][] parsingTable;
+    static ArrayList<Production2> productions = new ArrayList<>();
+    static Production2[][] parsingTable;
     static {
         populateParsingTable();
     }
     static ArrayList<Character> inputBuffer;
-    static ArrayList<Production> productionsToApply = new ArrayList<>();
+    static ArrayList<Production2> productionsToApply = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         if (args == null || args.length == 0)
@@ -36,35 +24,39 @@ public class Parser {
         inputBuffer.add('$');
         procedure('S');
         if (inputBuffer.size() == 1 && inputBuffer.get(0).charValue() == '$') {
-            for (Production p : productionsToApply)
+            for (Production2 p : productionsToApply)
                 p.print();
             System.out.println("success");
         }
     }
 
     public static void procedure(Character nonterminal) throws Exception {
-        
 
-        if(!nonterminals.contains(nonterminal))throw new Exception("error");
-        if(!terminals.contains(inputBuffer.get(0)))throw new Exception("error");
-        Production productions = parsingTable[nonterminals.indexOf(nonterminal)][terminals.indexOf(inputBuffer.get(0))];
-        if(productions==null)throw new Exception("error");
-        var pro = productions.body;
 
-        productionsToApply.add(productions);
+        Stack<Character> stack=new Stack<Character>();
 
-        for (Character character : pro) {
-            if (nonterminals.contains(character)) {
-                procedure(character);
-            } else if (character == inputBuffer.get(0)) {
-                inputBuffer.remove(character);
-            } else {
-                // call back
-                throw new Exception("An Error Occured");
+        stack.push('$');
+        stack.push('S');
+
+        while(stack.peek()!='$'){
+            Character c=(Character)stack.peek();
+            if(c==inputBuffer.get(0)){
+                stack.pop();
+                inputBuffer.remove(0);
+            }else if(!terminals.contains(inputBuffer.get(0))){
+                throw new Exception("error");
+            }else{
+                stack.pop();
+                var table = parsingTable[nonterminals.indexOf(c)][terminals.indexOf(inputBuffer.get(0))];
+                productionsToApply.add(table);
+                var body = table.body;
+                for (int i = 0; i < body.size(); i++) {
+                    stack.push(body.get(body.size()-i-1));
+                }
             }
-
         }
-        // write your code here
+
+        
     }
 
     public static void populateParsingTable() {
@@ -84,32 +76,32 @@ public class Parser {
         terminals.add('$');
 
         // add entries to parsing table
-        parsingTable = new Production[nonterminals.size()][terminals.size()];
-        Production p1 = new Production('S', 'T', 'E');
+        parsingTable = new Production2[nonterminals.size()][terminals.size()];
+        Production2 p1 = new Production2('S', 'T', 'E');
         parsingTable[nonterminals.indexOf('S')][terminals.indexOf('a')] = p1;
         parsingTable[nonterminals.indexOf('S')][terminals.indexOf('(')] = p1;
-        parsingTable[nonterminals.indexOf('E')][terminals.indexOf('+')] = new Production('E', '+', 'T', 'E');
-        Production p2 = new Production('E', new Character[] {});
+        parsingTable[nonterminals.indexOf('E')][terminals.indexOf('+')] = new Production2('E', '+', 'T', 'E');
+        Production2 p2 = new Production2('E', new Character[] {});
         parsingTable[nonterminals.indexOf('E')][terminals.indexOf(')')] = p2;
         parsingTable[nonterminals.indexOf('E')][terminals.indexOf('$')] = p2;
-        Production p3 = new Production('T', 'F', 'X');
+        Production2 p3 = new Production2('T', 'F', 'X');
         parsingTable[nonterminals.indexOf('T')][terminals.indexOf('a')] = p3;
         parsingTable[nonterminals.indexOf('T')][terminals.indexOf('(')] = p3;
-        Production p4 = new Production('X', new Character[] {});
+        Production2 p4 = new Production2('X', new Character[] {});
         parsingTable[nonterminals.indexOf('X')][terminals.indexOf('+')] = p4;
-        parsingTable[nonterminals.indexOf('X')][terminals.indexOf('*')] = new Production('X', '*', 'F', 'X');
+        parsingTable[nonterminals.indexOf('X')][terminals.indexOf('*')] = new Production2('X', '*', 'F', 'X');
         parsingTable[nonterminals.indexOf('X')][terminals.indexOf(')')] = p4;
         parsingTable[nonterminals.indexOf('X')][terminals.indexOf('$')] = p4;
-        parsingTable[nonterminals.indexOf('F')][terminals.indexOf('a')] = new Production('F', 'a');
-        parsingTable[nonterminals.indexOf('F')][terminals.indexOf('(')] = new Production('F', '(', 'S', ')');
+        parsingTable[nonterminals.indexOf('F')][terminals.indexOf('a')] = new Production2('F', 'a');
+        parsingTable[nonterminals.indexOf('F')][terminals.indexOf('(')] = new Production2('F', '(', 'S', ')');
     }
 }
 
-class Production {
+class Production2 {
     Character head;
     ArrayList<Character> body;
 
-    public Production(Character head, Character... body) {
+    public Production2(Character head, Character... body) {
         this.head = head;
         this.body = new ArrayList<Character>(Arrays.asList(body));
     }
