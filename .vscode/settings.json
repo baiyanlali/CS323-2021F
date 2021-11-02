@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.lua.txt": "lua",
+        "symtab_ht.h": "c",
+        "type_traits": "c"
+    }
+}

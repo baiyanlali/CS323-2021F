@@ -1,0 +1,51 @@
+int symtab_remove_backup(symtab *self, char *key)
+{
+    long hash = GetHash(key);
+    printf("remove, hash: %ld, key: %s\n", hash, key);
+    if ((*self)[hash] != NULL)
+    {
+        printf("start to remove, hash: %ld, key: %s\n", hash, key);
+        struct _node *cur_node = (*self)[hash];
+        struct _node *last_node;
+
+        if (strcmp(cur_node->entry.key, key) == 0)
+        {
+            (*self)[hash] = NULL;
+            return 1;
+        }
+        last_node = cur_node;
+        cur_node = cur_node->next;
+        if (strcmp(cur_node->entry.key, key) == 0)
+        {
+            (*self)[hash] = cur_node;
+            return 1;
+        }
+        last_node = cur_node;
+        cur_node = cur_node->next;
+        while (strcmp(cur_node->entry.key, key) != 0 && cur_node->next != NULL)
+        {
+            last_node = cur_node;
+            cur_node = cur_node->next;
+        }
+        if (strcmp(cur_node->entry.key, key) == 0)
+        {
+
+            last_node->next = cur_node->next;
+            cur_node->next = NULL;
+            return 1;
+        }
+    }
+    printf("remove not found, hash: %ld, key: %s\n", hash, key);
+    printf("exist hash:\n");
+
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        if ((*self)[i] != NULL)
+        {
+            printf("hash: %d\n", i);
+        }
+    }
+    printf("remove not found, hash: %ld, key: %s\n", hash, key);
+
+    return 0;
+}

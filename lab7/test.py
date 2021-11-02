@@ -12,11 +12,13 @@ class SymbolTable(ctypes.Structure):
     lib_path = os.path.join(cwd, 'libsymtab.so')
     lib = ctypes.CDLL(lib_path)
     def __init__(self):
+        print("Start init")
         self.lib.symtab_init.restype = ctypes.POINTER(SymbolTable)
         self.lib.symtab_insert.restype = ctypes.c_int32
         self.lib.symtab_lookup.restype = ctypes.c_int32
         self.lib.symtab_remove.restype = ctypes.c_int32
         self.this = self.lib.symtab_init()
+        print("Start init end")
 
     @staticmethod
     def safe_key(key):
@@ -46,20 +48,28 @@ class SymbolTableTest(unittest.TestCase):
         random.seed(1307)
 
     def test_01(self):
+        print("Test 1")
         st = SymbolTable()
+        print("Test 1 insert")
         st.insert('10', 10)
         st.insert('20', 20)
+        print("Test 1 insert end")
         self.assertEqual(st.lookup('10'), 10)
         self.assertEqual(st.lookup('20'), 20)
         self.assertEqual(st.insert('30', 30), 1)
         self.assertEqual(st.insert('10', 100), 0)
+        print("Test 1 insert remove")
         st.remove('10')
+        print("Test 1 insert remove end")
         self.assertEqual(st.insert('10', 100), 1)
         self.assertEqual(st.lookup('10'), 100)
         self.assertEqual(st.remove('10'), 1)
         self.assertEqual(st.remove('10'), 0)
+        print("Test 1 end")
 
     def test_02(self):
+        # pass
+        print("Test 2")
         st = SymbolTable()
         size = 1000
         data = list(range(size))
@@ -72,6 +82,8 @@ class SymbolTableTest(unittest.TestCase):
         self.assertEqual(st.lookup(str(size)), -1)
 
     def test_03(self):
+        # pass
+        print("Test 3")
         letters = string.ascii_lowercase + string.ascii_uppercase
         st = SymbolTable()
         tab = dict()

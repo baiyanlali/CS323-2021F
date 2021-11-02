@@ -13,11 +13,13 @@ struct symtab {
 // ************************************************************
 
 symtab *symtab_init(){
-
+    symtab *self=malloc(sizeof(symtab));
+    self->left=NULL;
+    self->right=NULL;
 }
 
 int symtab_insert(symtab *self, char *key, VAL_T value){
-
+    
 }
 
 VAL_T symtab_lookup(symtab *self, char *key){
